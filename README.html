@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combat Shak Coaching - Full Web Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #121212;
+            --card-border: #1f1f1f;
+            --primary-gold: #c5a059;
+            --primary-red: #d32f2f;
+            --text-light: #ffffff;
+            --text-muted: #8e8e93;
+            --font-main: 'Montserrat', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* --- Left Sidebar (Hero Section) --- */
+        .sidebar {
+            width: 350px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,1)), 
+                        url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+            background-size: cover;
+            background-position: center;
+            border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 10;
+        }
+
+        .brand-container { text-align: center; }
+        .logo-icon { font-size: 48px; color: var(--primary-gold); margin-bottom: 10px; }
+        .brand-title { font-size: 24px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; line-height: 1.2; }
+        .brand-subtitle { font-size: 14px; color: var(--primary-gold); letter-spacing: 6px; margin-top: 5px; margin-bottom: 20px; text-transform: uppercase; }
+        .tagline { font-size: 12px; color: #ccc; letter-spacing: 2px; line-height: 1.6; text-transform: uppercase; font-weight: 600; }
+
+        .auth-buttons { display: flex; flex-direction: column; gap: 15px; }
+        .btn { width: 100%; padding: 15px; border-radius: 8px; font-family: var(--font-main); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; border: none; transition: all 0.3s ease; }
+        .btn-gold { background-color: var(--primary-gold); color: #000; }
+        .btn-gold:hover { background-color: #d6af66; }
+        .btn-dark { background-color: #1a1a1a; color: var(--text-light); border: 1px solid #333; }
+        .btn-dark:hover { background-color: #252525; }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex: 1; display: flex; flex-direction: column; overflow-y: auto; background-color: var(--bg-color); position: relative;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 25px 50px;
+            background-color: rgba(5, 5, 5, 0.95); border-bottom: 1px solid var(--card-border);
+            position: sticky; top: 0; z-index: 5;
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px; transition: color 0.3s; cursor: pointer;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-gold); }
+
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; background-color: #333; border: 2px solid var(--primary-gold); }
+
+        /* View Containers */
+        .view-section { display: none; padding: 40px 50px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-header { font-size: 32px; font-weight: 800; margin-bottom: 30px; text-transform: uppercase; }
+
+        /* Reusable UI Components */
+        .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; }
+        .card-header { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: 700; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        
+        /* List Items (for Boxing/Strength) */
+        .list-card {
+            background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
+            padding: 20px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: background-color 0.2s, border-color 0.2s; margin-bottom: 15px;
+        }
+        .list-card:hover { background-color: #1a1a1a; border-color: var(--primary-gold); }
+        .list-icon { width: 50px; height: 50px; border-radius: 8px; background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; color: var(--primary-gold); font-size: 24px; margin-right: 20px; }
+        .list-info { flex: 1; }
+        .list-title { font-size: 18px; font-weight: 700; margin-bottom: 5px; }
+        .list-desc { font-size: 13px; color: var(--text-muted); }
+
+        /* Custom UI Elements from Home View */
+        .workout-card {
+            position: relative; overflow: hidden; min-height: 250px; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; border-radius: 12px;
+        }
+        .workout-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1599058917212-97d142f4cda3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); background-size: cover; background-position: center; z-index: 1;
+        }
+        .workout-content { position: relative; z-index: 2; }
+        .btn-red { background-color: var(--primary-red); color: white; border: none; padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 700; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; transition: opacity 0.2s; }
+        .btn-red:hover { opacity: 0.9; }
+        
+        /* Nutrition Bars */
+        .progress-bar-bg { width: 100%; height: 8px; background-color: #222; border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background-color: var(--primary-gold); border-radius: 4px; }
+        .progress-bar-fill.red { background-color: var(--primary-red); }
+        .progress-bar-fill.white { background-color: #fff; }
+
+        /* Modal Overlay for Interactive Buttons */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg); border: 1px solid var(--primary-gold); width: 550px; max-width: 90%; border-radius: 12px; padding: 30px; position: relative; animation: modalPop 0.3s ease; max-height: 85vh; overflow-y: auto;
+        }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .modal-close:hover { color: var(--text-light); }
+        .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; color: var(--primary-gold); }
+        .modal-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; }
+        
+        /* Detailed Example Lists inside Modals */
+        .example-item {
+            background: #1a1a1a; border-left: 3px solid var(--primary-gold); padding: 12px 15px; margin-bottom: 10px; border-radius: 4px; color: #fff;
+        }
+        .example-item strong { color: var(--primary-gold); display: block; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand-container">
+            <i class="fa-solid fa-shield-halved logo-icon"></i>
+            <div class="brand-title">Combat<br>Shak</div>
+            <div class="brand-subtitle">- Coaching -</div>
+            <div class="tagline">Built with purpose.<br>Trained to transform.</div>
+        </div>
+        <div class="auth-buttons">
+            <button class="btn btn-gold" id="btnLogin">Log In</button>
+            <button class="btn btn-dark" id="btnSignup">Sign Up</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <nav class="nav-links">
+                <a class="active" data-target="view-home">Home</a>
+                <a data-target="view-boxing">Boxing</a>
+                <a data-target="view-strength">Strength</a>
+                <a data-target="view-nutrition">Nutrition</a>
+                <a data-target="view-progress">Progress</a>
+            </nav>
+            <div class="user-profile">
+                <i class="fa-regular fa-bell" id="btnNotifications" style="font-size: 20px; cursor: pointer;" title="Notifications"></i>
+                <div class="profile-pic" id="userProfilePic" style="cursor: pointer;" title="Profile Settings"></div>
+            </div>
+        </header>
+
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section active">
+            <div style="margin-bottom: 25px;">
+                <h2 class="section-header" style="margin-bottom: 5px;">Welcome back, Shak 🔥</h2>
+                <p style="color: var(--text-muted);">Here is your overview for today. Let's get to work.</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="workout-card" style="grid-column: span 2;">
+                    <div class="workout-content">
+                        <div class="card-header" style="color: #fff;">Today's Workout</div>
+                        <div style="font-size: 36px; font-weight: 800; margin-bottom: 5px;">Power & Boxing</div>
+                        <div style="font-size: 16px; color: #ddd;">Upper Body + Heavy Bag Rounds</div>
+                        <button class="btn-red" id="btnStartWorkout">Start Workout <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center; gap:20px;">
+                    <div class="card-header">Daily Summary</div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom:10px;">
+                        <span style="color: var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase;">Calories</span>
+                        <span style="font-size:20px; font-weight:700;">2,450 <span style="font-size:12px; color:#555;">/2800</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom:10px;">
+                        <span style="color: var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase;">Protein</span>
+                        <span style="font-size:20px; font-weight:700;">165g <span style="font-size:12px; color:#555;">/180g</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase;">Water</span>
+                        <span style="font-size:20px; font-weight:700;">2.4L <span style="font-size:12px; color:#555;">/3.0L</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOXING VIEW -->
+        <div id="view-boxing" class="view-section">
+            <h2 class="section-header">Technique Library</h2>
+            <div class="grid-2">
+                <div class="list-card" data-feature="Punch Library">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-hand-fist"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Punch Library</div>
+                            <div class="list-desc">Learn Every Punch</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Combinations">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Combinations</div>
+                            <div class="list-desc">Hundreds of Combos</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Drills">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Drills</div>
+                            <div class="list-desc">Improve Your Skills</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Heavy Bag">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-sack-xmark"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Heavy Bag</div>
+                            <div class="list-desc">Rounds & Workouts</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Pad Work">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-hand-sparkles"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Pad Work</div>
+                            <div class="list-desc">Coach Pad Sessions</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Defensive Skills">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-shield"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Defensive Skills</div>
+                            <div class="list-desc">Movement & Defense</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- STRENGTH VIEW -->
+        <div id="view-strength" class="view-section">
+            <h2 class="section-header">Built for Power</h2>
+            <div class="grid-2">
+                <div class="list-card" data-feature="Muscle Building">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-dumbbell"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Muscle Building</div>
+                            <div class="list-desc">Build Lean Muscle</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Explosive Power">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Explosive Power</div>
+                            <div class="list-desc">Maximize Power Output</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Speed & Agility">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-person-running"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Speed & Agility</div>
+                            <div class="list-desc">Move Faster. React Quicker.</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+                <div class="list-card" data-feature="Core Training">
+                    <div style="display: flex; align-items: center;">
+                        <div class="list-icon"><i class="fa-solid fa-child-reaching"></i></div>
+                        <div class="list-info">
+                            <div class="list-title">Core Training</div>
+                            <div class="list-desc">Stronger Core. Better Performance.</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUTRITION VIEW -->
+        <div id="view-nutrition" class="view-section">
+            <h2 class="section-header">Nutrition Plan</h2>
+            <div class="grid-2">
+                <div class="card" style="display: flex; align-items: center; justify-content: center; gap: 50px;">
+                    <div>
+                        <div class="card-header">Calorie Target</div>
+                        <div style="font-size: 48px; font-weight: 800;">2,800 <span style="font-size: 16px; font-weight:400; color:var(--text-muted);">kcal</span></div>
+                        <div style="color: var(--text-muted); font-size: 14px; margin-top:5px;">Daily Goal</div>
+                    </div>
+                    <div style="width: 150px; height: 150px; border-radius: 50%; border: 15px solid var(--primary-red); border-right-color: #333; transform: rotate(45deg);"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Macros</div>
+                    <div style="margin-bottom: 25px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;">
+                            <span>Protein</span><span>165g / 180g (92%)</span>
+                        </div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill red" style="width: 92%;"></div></div>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;">
+                            <span>Carbs</span><span>320g / 350g (91%)</span>
+                        </div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill white" style="width: 91%;"></div></div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600;">
+                            <span>Fats</span><span>80g / 90g (89%)</span>
+                        </div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 89%;"></div></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-gold" id="btnFullMealPlan" style="width: max-content; padding: 15px 40px; margin-top: 25px; color: black;">View Full Meal Plan</button>
+        </div>
+
+        <!-- PROGRESS VIEW -->
+        <div id="view-progress" class="view-section">
+            <h2 class="section-header">Your Progress</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div class="card-header">Weight</div>
+                            <div style="font-size: 36px; font-weight: 800;">78.5 kg</div>
+                            <div style="color: var(--primary-red); font-size: 14px; margin-top:5px; font-weight:600;">-1.2 kg from last week</div>
+                        </div>
+                    </div>
+                    <!-- Chart Simulation -->
+                    <div style="height: 150px; border-bottom: 1px solid #333; border-left: 1px solid #333; margin-top: 30px; position: relative; display: flex; align-items: flex-end; justify-content: space-between; padding-left: 10px;">
+                        <!-- Simulated Line Points -->
+                        <div style="width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; margin-bottom: 120px;"></div>
+                        <div style="width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; margin-bottom: 100px;"></div>
+                        <div style="width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; margin-bottom: 80px;"></div>
+                        <div style="width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; margin-bottom: 60px;"></div>
+                        <div style="width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; margin-bottom: 40px;"></div>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="card-header">Body Composition</div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="text-align: center;">
+                            <i class="fa-solid fa-users-viewfinder" style="font-size: 30px; color: var(--primary-gold); margin-bottom: 15px;"></i>
+                            <div style="font-size: 28px; font-weight: 800;">12.4%</div>
+                            <div style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; margin-top:5px;">Body Fat</div>
+                        </div>
+                        <div style="width: 1px; background-color: #333;"></div>
+                        <div style="text-align: center;">
+                            <i class="fa-solid fa-weight-scale" style="font-size: 30px; color: var(--primary-gold); margin-bottom: 15px;"></i>
+                            <div style="font-size: 28px; font-weight: 800;">67.6 kg</div>
+                            <div style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; margin-top:5px;">Lean Mass</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Container -->
+    <div class="modal-overlay" id="appModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-title" id="modalTitle">Notice</div>
+            <div class="modal-body" id="modalBody">Content goes here...</div>
+            <button class="btn btn-gold" id="modalActionBtn" style="color: #000; width: 100%;">Got It</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactivity with Detailed Examples -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navigation Elements
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const viewSections = document.querySelectorAll('.view-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    viewSections.forEach(section => section.classList.remove('active'));
+                    const targetId = e.target.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // Modal Controls
+            const modal = document.getElementById('appModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalClose = document.getElementById('modalClose');
+            const modalActionBtn = document.getElementById('modalActionBtn');
+
+            function showModal(title, htmlContent) {
+                modalTitle.textContent = title;
+                modalBody.innerHTML = htmlContent;
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modalActionBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            // 1. Sidebar Buttons
+            document.getElementById('btnLogin').addEventListener('click', () => {
+                showModal('Log In Gateway', `
+                    <p style="margin-bottom: 15px;">Access your secure fighter dashboard:</p>
+                    <div class="example-item"><strong>Fighter Email</strong> shakofficial@combat.com</div>
+                    <div class="example-item"><strong>Status</strong> Active Subscription (Elite Tier)</div>
+                `);
+            });
+
+            document.getElementById('btnSignup').addEventListener('click', () => {
+                showModal('New Fighter Registration', `
+                    <p style="margin-bottom: 15px;">Your starter package includes:</p>
+                    <div class="example-item"><strong>Step 1</strong> Initial weight class & stance assessment (Orthodox/Southpaw)</div>
+                    <div class="example-item"><strong>Step 2</strong> Custom macro calculator sync</div>
+                    <div class="example-item"><strong>Step 3</strong> 7-day free trial of elite boxing video modules</div>
+                `);
+            });
+
+            // 2. Header & Profile Icons
+            document.getElementById('btnNotifications').addEventListener('click', () => {
+                showModal('Recent Alerts', `
+                    <div class="example-item"><strong>Streak Reward</strong> 5-day training streak achieved! Keep pushing.</div>
+                    <div class="example-item"><strong>Coach Note</strong> Coach Shak reviewed your heavy bag workout video. Great snap on your double jabs!</div>
+                `);
+            });
+
+            document.getElementById('userProfilePic').addEventListener('click', () => {
+                showModal('Fighter Profile Settings', `
+                    <div class="example-item"><strong>Name</strong> Shak</div>
+                    <div class="example-item"><strong>Division</strong> Welterweight (78.5 kg)</div>
+                    <div class="example-item"><strong>Gym</strong> Combat Shak Headquarters</div>
+                `);
+            });
+
+            // 3. Home View Action Button
+            document.getElementById('btnStartWorkout').addEventListener('click', () => {
+                showModal('Power & Boxing Session Live', `
+                    <p style="margin-bottom: 15px;">Today's Workout Routine Breakdown:</p>
+                    <div class="example-item"><strong>Warm-up (5 mins)</strong> Jump rope, dynamic shoulder rotations, shadowboxing footwork.</div>
+                    <div class="example-item"><strong>Strength Circuit (3 rounds)</strong> Dumbbell Push Press (8 reps) + Explosive Pull-ups (6 reps).</div>
+                    <div class="example-item"><strong>Heavy Bag Rounds (4 x 3 mins)</strong> Focus on 1-2-3 combinations and lateral exits.</div>
+                `);
+            });
+
+            // 4. Boxing & Strength List Cards with Specific Examples
+            const featureExamples = {
+                "Punch Library": `
+                    <p style="margin-bottom: 15px;">Master fundamental striking mechanics:</p>
+                    <div class="example-item"><strong>1 - Jab</strong> Quick, straight punch with your lead hand. Step forward to close distance.</div>
+                    <div class="example-item"><strong>2 - Cross</strong> Power straight punch thrown with your rear hand, pivoting your back foot.</div>
+                    <div class="example-item"><strong>3 - Lead Hook</strong> Circular punch targeting the side of the head or guard using core rotation.</div>
+                    <div class="example-item"><strong>4 - Rear Uppercut</strong> Vertical upward strike driven from the legs and hips through the center.</div>
+                `,
+                "Combinations": `
+                    <p style="margin-bottom: 15px;">Elite multi-strike sequences:</p>
+                    <div class="example-item"><strong>Combo A</strong> Jab, Cross, Lead Hook (1-2-3) — Classic rhythm breaker.</div>
+                    <div class="example-item"><strong>Combo B</strong> Double Jab, Rear Cross, Lead Hook (1-1-2-3) — Overwhelms opponent's guard.</div>
+                    <div class="example-item"><strong>Combo C</strong> Slip Outside, Rear Uppercut, Lead Hook (Slip 2-3) — Counter-punching masterclass.</div>
+                `,
+                "Drills": `
+                    <p style="margin-bottom: 15px;">Solo skill enhancement drills:</p>
+                    <div class="example-item"><strong>Footwork Matrix</strong> Step forward, lateral slide right, pivot left (3 sets of 2 mins).</div>
+                    <div class="example-item"><strong>Speed Burnout</strong> Continuous straight punches against resistance bands for 30-second intervals.</div>
+                `,
+                "Heavy Bag": `
+                    <p style="margin-bottom: 15px;">Bag conditioning protocols:</p>
+                    <div class="example-item"><strong>Power Round</strong> Maximum output power shots for 20 seconds, active recovery framing for 10 seconds (Tabata format).</div>
+                    <div class="example-item"><strong>Endurance Round</strong> Continuous light combinations maintaining high punch volume for full 3-minute rounds.</div>
+                `,
+                "Pad Work": `
+                    <p style="margin-bottom: 15px;">Visual reaction and timing drills:</p>
+                    <div class="example-item"><strong>Call-Out Drill</strong> Reacting instantly to coach verbal cues (e.g., "Two!" triggers immediate Cross).</div>
+                    <div class="example-item"><strong>Catch & Counter</strong> Blocking incoming pad slaps and immediately returning with a counter hook.</div>
+                `,
+                "Defensive Skills": `
+                    <p style="margin-bottom: 15px;">Evade and neutralize attacks:</p>
+                    <div class="example-item"><strong>The Slip</strong> Moving the head slightly off-center to let straight punches pass safely by your ear.</div>
+                    <div class="example-item"><strong>The Roll / Bob & Weave</strong> Ducking low in a U-shape motion underneath looping hook punches.</div>
+                    <div class="example-item"><strong>High Guard</strong> Tight elbow placement with gloved palms protecting temples and jawline.</div>
+                `,
+                "Muscle Building": `
+                    <p style="margin-bottom: 15px;">Hypertrophy focused training blocks:</p>
+                    <div class="example-item"><strong>Chest & Triceps</strong> Incline Dumbbell Press (4x10), Weighted Dips (3x8), Cable Flyes (3x12).</div>
+                    <div class="example-item"><strong>Back & Biceps</strong> Barbell Rows (4x8), Lat Pulldowns (3x10), Hammer Curls (3x12).</div>
+                `,
+                "Explosive Power": `
+                    <p style="margin-bottom: 15px;">Maximize force generation and speed-strength:</p>
+                    <div class="example-item"><strong>Medicine Ball Slams</strong> 4 sets of 10 explosive overhead throws into the floor.</div>
+                    <div class="example-item"><strong>Box Jumps</strong> 4 sets of 6 reps focusing on soft, explosive landings.</div>
+                `,
+                "Speed & Agility": `
+                    <p style="margin-bottom: 15px;">Foot speed and reaction training:</p>
+                    <div class="example-item"><strong>Agility Ladder</strong> In-in-out-out footwork drills (4 rounds x 30 seconds).</div>
+                    <div class="example-item"><strong>Reaction Sprints</strong> 10-meter acceleration bursts off audio/visual stimulus.</div>
+                `,
+                "Core Training": `
+                    <p style="margin-bottom: 15px;">Bulletproof torso conditioning for shock absorption:</p>
+                    <div class="example-item"><strong>Hanging Leg Raises</strong> 3 sets of 12 strict reps targeting lower abs.</div>
+                    <div class="example-item"><strong>Russian Twists</strong> 3 sets of 20 reps holding a 10kg plate for rotational stability.</div>
+                `
+            };
+
+            document.querySelectorAll('.list-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const featureName = card.getAttribute('data-feature');
+                    const details = featureExamples[featureName] || `<p>Detailed training programs and step-by-step video guides for ${featureName} are loaded and ready.</p>`;
+                    showModal(featureName, details);
+                });
+            });
+
+            // 5. Nutrition View Button with Detailed Meal Plan Examples
+            document.getElementById('btnFullMealPlan').addEventListener('click', () => {
+                showModal('Full Meal Plan & Macro Breakdown', `
+                    <p style="margin-bottom: 15px;">Daily Target: 2,800 kcal | Protein: 180g | Carbs: 350g | Fats: 90g</p>
+                    <div class="example-item"><strong>Breakfast (Meal 1)</strong> 4 whole eggs, 100g oats with berries, and 1 scoop whey protein isolate. (~650 kcal)</div>
+                    <div class="example-item"><strong>Lunch (Meal 2)</strong> 200g grilled chicken breast, 250g jasmine rice, and steamed broccoli with olive oil. (~750 kcal)</div>
+                    <div class="example-item"><strong>Pre-Workout (Meal 3)</strong> Rice cakes with almond butter and a banana. (~400 kcal)</div>
+                    <div class="example-item"><strong>Dinner (Meal 4)</strong> 220g lean steak or salmon, sweet potato wedges, and mixed green salad. (~800 kcal)</div>
+                    <div class="example-item"><strong>Before Bed (Meal 5)</strong> Casein protein shake or 200g Greek yogurt with walnuts. (~200 kcal)</div>
+                `);
+            });
+        });
+    </script>
+</body>
+</html>
