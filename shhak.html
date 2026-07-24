@@ -128,13 +128,19 @@
             background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 100;
         }
         .modal-content {
-            background: var(--card-bg); border: 1px solid var(--primary-gold); width: 500px; max-width: 90%; border-radius: 12px; padding: 30px; position: relative; animation: modalPop 0.3s ease;
+            background: var(--card-bg); border: 1px solid var(--primary-gold); width: 550px; max-width: 90%; border-radius: 12px; padding: 30px; position: relative; animation: modalPop 0.3s ease; max-height: 85vh; overflow-y: auto;
         }
         @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-close { position: absolute; top: 15px; right: 20px; font-size: 20px; color: var(--text-muted); cursor: pointer; }
         .modal-close:hover { color: var(--text-light); }
         .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; color: var(--primary-gold); }
         .modal-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; }
+        
+        /* Detailed Example Lists inside Modals */
+        .example-item {
+            background: #1a1a1a; border-left: 3px solid var(--primary-gold); padding: 12px 15px; margin-bottom: 10px; border-radius: 4px; color: #fff;
+        }
+        .example-item strong { color: var(--primary-gold); display: block; margin-bottom: 3px; }
     </style>
 </head>
 <body>
@@ -407,7 +413,7 @@
         </div>
     </div>
 
-    <!-- JavaScript for Interactivity -->
+    <!-- JavaScript for Interactivity with Detailed Examples -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Navigation Elements
@@ -432,9 +438,9 @@
             const modalClose = document.getElementById('modalClose');
             const modalActionBtn = document.getElementById('modalActionBtn');
 
-            function showModal(title, text) {
+            function showModal(title, htmlContent) {
                 modalTitle.textContent = title;
-                modalBody.textContent = text;
+                modalBody.innerHTML = htmlContent;
                 modal.style.display = 'flex';
             }
 
@@ -450,38 +456,124 @@
 
             // 1. Sidebar Buttons
             document.getElementById('btnLogin').addEventListener('click', () => {
-                showModal('Log In', 'Redirecting to secure Combat Shak authentication gateway...');
+                showModal('Log In Gateway', `
+                    <p style="margin-bottom: 15px;">Access your secure fighter dashboard:</p>
+                    <div class="example-item"><strong>Fighter Email</strong> shakofficial@combat.com</div>
+                    <div class="example-item"><strong>Status</strong> Active Subscription (Elite Tier)</div>
+                `);
             });
 
             document.getElementById('btnSignup').addEventListener('click', () => {
-                showModal('Sign Up', 'Welcome! Let us set up your fighter profile and custom program.');
+                showModal('New Fighter Registration', `
+                    <p style="margin-bottom: 15px;">Your starter package includes:</p>
+                    <div class="example-item"><strong>Step 1</strong> Initial weight class & stance assessment (Orthodox/Southpaw)</div>
+                    <div class="example-item"><strong>Step 2</strong> Custom macro calculator sync</div>
+                    <div class="example-item"><strong>Step 3</strong> 7-day free trial of elite boxing video modules</div>
+                `);
             });
 
             // 2. Header & Profile Icons
             document.getElementById('btnNotifications').addEventListener('click', () => {
-                showModal('Notifications', 'You have no new alerts. Your training streak is active for 5 days straight!');
+                showModal('Recent Alerts', `
+                    <div class="example-item"><strong>Streak Reward</strong> 5-day training streak achieved! Keep pushing.</div>
+                    <div class="example-item"><strong>Coach Note</strong> Coach Shak reviewed your heavy bag workout video. Great snap on your double jabs!</div>
+                `);
             });
 
             document.getElementById('userProfilePic').addEventListener('click', () => {
-                showModal('Fighter Profile', 'Shak | Level: Elite Striker | Weight Class: Welterweight (78.5 kg)');
+                showModal('Fighter Profile Settings', `
+                    <div class="example-item"><strong>Name</strong> Shak</div>
+                    <div class="example-item"><strong>Division</strong> Welterweight (78.5 kg)</div>
+                    <div class="example-item"><strong>Gym</strong> Combat Shak Headquarters</div>
+                `);
             });
 
             // 3. Home View Action Button
             document.getElementById('btnStartWorkout').addEventListener('click', () => {
-                showModal('Workout Started', 'Timer initialized! Round 1 of Power & Boxing is now live. Keep your guard up.');
+                showModal('Power & Boxing Session Live', `
+                    <p style="margin-bottom: 15px;">Today's Workout Routine Breakdown:</p>
+                    <div class="example-item"><strong>Warm-up (5 mins)</strong> Jump rope, dynamic shoulder rotations, shadowboxing footwork.</div>
+                    <div class="example-item"><strong>Strength Circuit (3 rounds)</strong> Dumbbell Push Press (8 reps) + Explosive Pull-ups (6 reps).</div>
+                    <div class="example-item"><strong>Heavy Bag Rounds (4 x 3 mins)</strong> Focus on 1-2-3 combinations and lateral exits.</div>
+                `);
             });
 
-            // 4. Boxing & Strength List Cards
+            // 4. Boxing & Strength List Cards with Specific Examples
+            const featureExamples = {
+                "Punch Library": `
+                    <p style="margin-bottom: 15px;">Master fundamental striking mechanics:</p>
+                    <div class="example-item"><strong>1 - Jab</strong> Quick, straight punch with your lead hand. Step forward to close distance.</div>
+                    <div class="example-item"><strong>2 - Cross</strong> Power straight punch thrown with your rear hand, pivoting your back foot.</div>
+                    <div class="example-item"><strong>3 - Lead Hook</strong> Circular punch targeting the side of the head or guard using core rotation.</div>
+                    <div class="example-item"><strong>4 - Rear Uppercut</strong> Vertical upward strike driven from the legs and hips through the center.</div>
+                `,
+                "Combinations": `
+                    <p style="margin-bottom: 15px;">Elite multi-strike sequences:</p>
+                    <div class="example-item"><strong>Combo A</strong> Jab, Cross, Lead Hook (1-2-3) — Classic rhythm breaker.</div>
+                    <div class="example-item"><strong>Combo B</strong> Double Jab, Rear Cross, Lead Hook (1-1-2-3) — Overwhelms opponent's guard.</div>
+                    <div class="example-item"><strong>Combo C</strong> Slip Outside, Rear Uppercut, Lead Hook (Slip 2-3) — Counter-punching masterclass.</div>
+                `,
+                "Drills": `
+                    <p style="margin-bottom: 15px;">Solo skill enhancement drills:</p>
+                    <div class="example-item"><strong>Footwork Matrix</strong> Step forward, lateral slide right, pivot left (3 sets of 2 mins).</div>
+                    <div class="example-item"><strong>Speed Burnout</strong> Continuous straight punches against resistance bands for 30-second intervals.</div>
+                `,
+                "Heavy Bag": `
+                    <p style="margin-bottom: 15px;">Bag conditioning protocols:</p>
+                    <div class="example-item"><strong>Power Round</strong> Maximum output power shots for 20 seconds, active recovery framing for 10 seconds (Tabata format).</div>
+                    <div class="example-item"><strong>Endurance Round</strong> Continuous light combinations maintaining high punch volume for full 3-minute rounds.</div>
+                `,
+                "Pad Work": `
+                    <p style="margin-bottom: 15px;">Visual reaction and timing drills:</p>
+                    <div class="example-item"><strong>Call-Out Drill</strong> Reacting instantly to coach verbal cues (e.g., "Two!" triggers immediate Cross).</div>
+                    <div class="example-item"><strong>Catch & Counter</strong> Blocking incoming pad slaps and immediately returning with a counter hook.</div>
+                `,
+                "Defensive Skills": `
+                    <p style="margin-bottom: 15px;">Evade and neutralize attacks:</p>
+                    <div class="example-item"><strong>The Slip</strong> Moving the head slightly off-center to let straight punches pass safely by your ear.</div>
+                    <div class="example-item"><strong>The Roll / Bob & Weave</strong> Ducking low in a U-shape motion underneath looping hook punches.</div>
+                    <div class="example-item"><strong>High Guard</strong> Tight elbow placement with gloved palms protecting temples and jawline.</div>
+                `,
+                "Muscle Building": `
+                    <p style="margin-bottom: 15px;">Hypertrophy focused training blocks:</p>
+                    <div class="example-item"><strong>Chest & Triceps</strong> Incline Dumbbell Press (4x10), Weighted Dips (3x8), Cable Flyes (3x12).</div>
+                    <div class="example-item"><strong>Back & Biceps</strong> Barbell Rows (4x8), Lat Pulldowns (3x10), Hammer Curls (3x12).</div>
+                `,
+                "Explosive Power": `
+                    <p style="margin-bottom: 15px;">Maximize force generation and speed-strength:</p>
+                    <div class="example-item"><strong>Medicine Ball Slams</strong> 4 sets of 10 explosive overhead throws into the floor.</div>
+                    <div class="example-item"><strong>Box Jumps</strong> 4 sets of 6 reps focusing on soft, explosive landings.</div>
+                `,
+                "Speed & Agility": `
+                    <p style="margin-bottom: 15px;">Foot speed and reaction training:</p>
+                    <div class="example-item"><strong>Agility Ladder</strong> In-in-out-out footwork drills (4 rounds x 30 seconds).</div>
+                    <div class="example-item"><strong>Reaction Sprints</strong> 10-meter acceleration bursts off audio/visual stimulus.</div>
+                `,
+                "Core Training": `
+                    <p style="margin-bottom: 15px;">Bulletproof torso conditioning for shock absorption:</p>
+                    <div class="example-item"><strong>Hanging Leg Raises</strong> 3 sets of 12 strict reps targeting lower abs.</div>
+                    <div class="example-item"><strong>Russian Twists</strong> 3 sets of 20 reps holding a 10kg plate for rotational stability.</div>
+                `
+            };
+
             document.querySelectorAll('.list-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const featureName = card.getAttribute('data-feature');
-                    showModal(featureName, `Loading interactive modules, video tutorials, and custom routines for ${featureName}...`);
+                    const details = featureExamples[featureName] || `<p>Detailed training programs and step-by-step video guides for ${featureName} are loaded and ready.</p>`;
+                    showModal(featureName, details);
                 });
             });
 
-            // 5. Nutrition View Button
+            // 5. Nutrition View Button with Detailed Meal Plan Examples
             document.getElementById('btnFullMealPlan').addEventListener('click', () => {
-                showModal('Full Meal Plan', 'Loading macro breakdowns, pre-workout meals, and recovery nutrition guides...');
+                showModal('Full Meal Plan & Macro Breakdown', `
+                    <p style="margin-bottom: 15px;">Daily Target: 2,800 kcal | Protein: 180g | Carbs: 350g | Fats: 90g</p>
+                    <div class="example-item"><strong>Breakfast (Meal 1)</strong> 4 whole eggs, 100g oats with berries, and 1 scoop whey protein isolate. (~650 kcal)</div>
+                    <div class="example-item"><strong>Lunch (Meal 2)</strong> 200g grilled chicken breast, 250g jasmine rice, and steamed broccoli with olive oil. (~750 kcal)</div>
+                    <div class="example-item"><strong>Pre-Workout (Meal 3)</strong> Rice cakes with almond butter and a banana. (~400 kcal)</div>
+                    <div class="example-item"><strong>Dinner (Meal 4)</strong> 220g lean steak or salmon, sweet potato wedges, and mixed green salad. (~800 kcal)</div>
+                    <div class="example-item"><strong>Before Bed (Meal 5)</strong> Casein protein shake or 200g Greek yogurt with walnuts. (~200 kcal)</div>
+                `);
             });
         });
     </script>
