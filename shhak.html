@@ -59,7 +59,7 @@
 
         /* --- Main Content Area --- */
         .main-content {
-            flex: 1; display: flex; flex-direction: column; overflow-y: auto; background-color: var(--bg-color);
+            flex: 1; display: flex; flex-direction: column; overflow-y: auto; background-color: var(--bg-color); position: relative;
         }
 
         /* Top Navigation */
@@ -113,13 +113,28 @@
             background: linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1599058917212-97d142f4cda3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); background-size: cover; background-position: center; z-index: 1;
         }
         .workout-content { position: relative; z-index: 2; }
-        .btn-red { background-color: var(--primary-red); color: white; border: none; padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 700; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; }
+        .btn-red { background-color: var(--primary-red); color: white; border: none; padding: 12px 25px; border-radius: 6px; font-size: 14px; font-weight: 700; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; transition: opacity 0.2s; }
+        .btn-red:hover { opacity: 0.9; }
         
         /* Nutrition Bars */
         .progress-bar-bg { width: 100%; height: 8px; background-color: #222; border-radius: 4px; margin-top: 8px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background-color: var(--primary-gold); border-radius: 4px; }
         .progress-bar-fill.red { background-color: var(--primary-red); }
         .progress-bar-fill.white { background-color: #fff; }
+
+        /* Modal Overlay for Interactive Buttons */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg); border: 1px solid var(--primary-gold); width: 500px; max-width: 90%; border-radius: 12px; padding: 30px; position: relative; animation: modalPop 0.3s ease;
+        }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .modal-close:hover { color: var(--text-light); }
+        .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; color: var(--primary-gold); }
+        .modal-body { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -132,8 +147,8 @@
             <div class="tagline">Built with purpose.<br>Trained to transform.</div>
         </div>
         <div class="auth-buttons">
-            <button class="btn btn-gold">Log In</button>
-            <button class="btn btn-dark">Sign Up</button>
+            <button class="btn btn-gold" id="btnLogin">Log In</button>
+            <button class="btn btn-dark" id="btnSignup">Sign Up</button>
         </div>
     </aside>
 
@@ -147,8 +162,8 @@
                 <a data-target="view-progress">Progress</a>
             </nav>
             <div class="user-profile">
-                <i class="fa-regular fa-bell" style="font-size: 20px; cursor: pointer;"></i>
-                <div class="profile-pic"></div>
+                <i class="fa-regular fa-bell" id="btnNotifications" style="font-size: 20px; cursor: pointer;" title="Notifications"></i>
+                <div class="profile-pic" id="userProfilePic" style="cursor: pointer;" title="Profile Settings"></div>
             </div>
         </header>
 
@@ -165,7 +180,7 @@
                         <div class="card-header" style="color: #fff;">Today's Workout</div>
                         <div style="font-size: 36px; font-weight: 800; margin-bottom: 5px;">Power & Boxing</div>
                         <div style="font-size: 16px; color: #ddd;">Upper Body + Heavy Bag Rounds</div>
-                        <button class="btn-red">Start Workout <i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="btn-red" id="btnStartWorkout">Start Workout <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
 
@@ -191,7 +206,7 @@
         <div id="view-boxing" class="view-section">
             <h2 class="section-header">Technique Library</h2>
             <div class="grid-2">
-                <div class="list-card">
+                <div class="list-card" data-feature="Punch Library">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-hand-fist"></i></div>
                         <div class="list-info">
@@ -201,7 +216,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Combinations">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-bolt"></i></div>
                         <div class="list-info">
@@ -211,7 +226,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Drills">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-stopwatch"></i></div>
                         <div class="list-info">
@@ -221,7 +236,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Heavy Bag">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-sack-xmark"></i></div>
                         <div class="list-info">
@@ -231,7 +246,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Pad Work">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-hand-sparkles"></i></div>
                         <div class="list-info">
@@ -241,7 +256,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Defensive Skills">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-shield"></i></div>
                         <div class="list-info">
@@ -258,7 +273,7 @@
         <div id="view-strength" class="view-section">
             <h2 class="section-header">Built for Power</h2>
             <div class="grid-2">
-                <div class="list-card">
+                <div class="list-card" data-feature="Muscle Building">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-dumbbell"></i></div>
                         <div class="list-info">
@@ -268,7 +283,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Explosive Power">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
                         <div class="list-info">
@@ -278,7 +293,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Speed & Agility">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-person-running"></i></div>
                         <div class="list-info">
@@ -288,7 +303,7 @@
                     </div>
                     <i class="fa-solid fa-chevron-right" style="color: #444;"></i>
                 </div>
-                <div class="list-card">
+                <div class="list-card" data-feature="Core Training">
                     <div style="display: flex; align-items: center;">
                         <div class="list-icon"><i class="fa-solid fa-child-reaching"></i></div>
                         <div class="list-info">
@@ -336,7 +351,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-gold" style="width: max-content; padding: 15px 40px; margin-top: 25px; color: black;">View Full Meal Plan</button>
+            <button class="btn btn-gold" id="btnFullMealPlan" style="width: max-content; padding: 15px 40px; margin-top: 25px; color: black;">View Full Meal Plan</button>
         </div>
 
         <!-- PROGRESS VIEW -->
@@ -382,25 +397,91 @@
         </div>
     </main>
 
-    <!-- JavaScript for Tab Switching -->
+    <!-- Modal Container -->
+    <div class="modal-overlay" id="appModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-title" id="modalTitle">Notice</div>
+            <div class="modal-body" id="modalBody">Content goes here...</div>
+            <button class="btn btn-gold" id="modalActionBtn" style="color: #000; width: 100%;">Got It</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Navigation Elements
             const navLinks = document.querySelectorAll('.nav-links a');
             const viewSections = document.querySelectorAll('.view-section');
 
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
-                    // Remove active from all links
                     navLinks.forEach(nav => nav.classList.remove('active'));
-                    // Add active to clicked link
                     e.target.classList.add('active');
 
-                    // Hide all views
                     viewSections.forEach(section => section.classList.remove('active'));
-                    // Show target view
                     const targetId = e.target.getAttribute('data-target');
                     document.getElementById(targetId).classList.add('active');
                 });
+            });
+
+            // Modal Controls
+            const modal = document.getElementById('appModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const modalClose = document.getElementById('modalClose');
+            const modalActionBtn = document.getElementById('modalActionBtn');
+
+            function showModal(title, text) {
+                modalTitle.textContent = title;
+                modalBody.textContent = text;
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modalActionBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            // 1. Sidebar Buttons
+            document.getElementById('btnLogin').addEventListener('click', () => {
+                showModal('Log In', 'Redirecting to secure Combat Shak authentication gateway...');
+            });
+
+            document.getElementById('btnSignup').addEventListener('click', () => {
+                showModal('Sign Up', 'Welcome! Let us set up your fighter profile and custom program.');
+            });
+
+            // 2. Header & Profile Icons
+            document.getElementById('btnNotifications').addEventListener('click', () => {
+                showModal('Notifications', 'You have no new alerts. Your training streak is active for 5 days straight!');
+            });
+
+            document.getElementById('userProfilePic').addEventListener('click', () => {
+                showModal('Fighter Profile', 'Shak | Level: Elite Striker | Weight Class: Welterweight (78.5 kg)');
+            });
+
+            // 3. Home View Action Button
+            document.getElementById('btnStartWorkout').addEventListener('click', () => {
+                showModal('Workout Started', 'Timer initialized! Round 1 of Power & Boxing is now live. Keep your guard up.');
+            });
+
+            // 4. Boxing & Strength List Cards
+            document.querySelectorAll('.list-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const featureName = card.getAttribute('data-feature');
+                    showModal(featureName, `Loading interactive modules, video tutorials, and custom routines for ${featureName}...`);
+                });
+            });
+
+            // 5. Nutrition View Button
+            document.getElementById('btnFullMealPlan').addEventListener('click', () => {
+                showModal('Full Meal Plan', 'Loading macro breakdowns, pre-workout meals, and recovery nutrition guides...');
             });
         });
     </script>
